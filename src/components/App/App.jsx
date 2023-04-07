@@ -27,7 +27,7 @@ export const App = () => {
         <Filter></Filter>
         <Contacts></Contacts>
       </Section>
-      <NotificationContainer />
+      <NotificationContaine />
     </>
   );
 };
