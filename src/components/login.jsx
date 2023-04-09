@@ -106,7 +106,7 @@ const Login = () => {
                   required
                 />
                 <Form.Control.Feedback type="invalid">
-                  Please enter a password(min minimum password length 7
+                  Please enter a password (min minimum password length 7
                   characters).
                 </Form.Control.Feedback>
               </InputGroup>
