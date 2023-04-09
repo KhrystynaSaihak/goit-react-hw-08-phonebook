@@ -1,7 +1,6 @@
 import React from 'react';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
 import { logIn } from 'redux/auth/operations';
 
 import Button from 'react-bootstrap/Button';
@@ -14,7 +13,6 @@ import Alert from 'react-bootstrap/Alert';
 
 const Login = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
