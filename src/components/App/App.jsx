@@ -1,33 +1,66 @@
-import React from 'react';
 import { useEffect } from 'react';
-import { NotificationContainer } from 'react-notifications';
-import 'react-notifications/lib/notifications.css';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchCurrentUser } from 'redux/auth/operations';
+import Contacts from './../../pages/Contacts';
+import { Route, Routes } from 'react-router-dom';
+import { RestrictedRoute } from './../RestrictedRoute';
+import { PrivateRoute } from './../PrivateRoute';
+import SignUp from './../SignUp';
+import Login from './../Login';
+import Layout from './../Layout';
+import { selectIsRefreshing } from 'redux/auth/selectors';
 
-import { Section } from 'components/Section/Section';
-import { DataInputForm } from 'components/DataInputForm/DataInputForm';
-import { Contacts } from 'components/Contacts/Contacts';
-import { Filter } from 'components/Filter/Filter';
-import { fetchContacts } from 'redux/operations';
+import 'bootstrap/dist/css/bootstrap.css';
+import Container from 'react-bootstrap/Container';
 
 export const App = () => {
   const dispatch = useDispatch();
+  const isRefreshing = useSelector(selectIsRefreshing);
 
   useEffect(() => {
-    dispatch(fetchContacts());
+    dispatch(fetchCurrentUser());
   }, [dispatch]);
 
   return (
     <>
-      <Section title="Phonebook">
-        <DataInputForm></DataInputForm>
-      </Section>
+      <Container className="d-grid gap-3">
+        {isRefreshing ? null : (
+          <Routes>
+            <Route path="/" element={<Layout />}>
+              <Route
+                path="/contacts"
+                element={
+                  <PrivateRoute redirectTo="/login" component={<Contacts />} />
+                }
+              ></Route>
+              <Route
+                path="/register"
+                element={
+                  <RestrictedRoute
+                    redirectTo="/contacts"
+                    component={<SignUp />}
+                  />
+                }
+              ></Route>
+              <Route
+                path="/login"
+                element={
+                  <RestrictedRoute
+                    redirectTo="/contacts"
+                    component={<Login />}
+                  />
+                }
+              ></Route>
+              <Route
+                path="/logout"
+                element={<PrivateRoute redirectTo="/" />}
+              ></Route>
+            </Route>
 
-      <Section title="Contacts">
-        <Filter></Filter>
-        <Contacts></Contacts>
-      </Section>
-      <NotificationContaine />
+            <Route path="*" element={<p>Path not resolved</p>} />
+          </Routes>
+        )}
+      </Container>
     </>
   );
 };
