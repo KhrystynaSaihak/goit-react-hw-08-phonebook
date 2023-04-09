@@ -5,10 +5,11 @@ import Contacts from './../../pages/Contacts';
 import { Route, Routes } from 'react-router-dom';
 import { RestrictedRoute } from './../RestrictedRoute';
 import { PrivateRoute } from './../PrivateRoute';
-import SignUp from './../SignUp';
-import Login from './../Login';
+import SignUp from '../../pages/SignUp';
+import Login from '../../pages/Login';
 import Layout from './../Layout';
 import { selectIsRefreshing } from 'redux/auth/selectors';
+import Spinner from 'react-bootstrap/Spinner';
 
 import 'bootstrap/dist/css/bootstrap.css';
 import Container from 'react-bootstrap/Container';
@@ -24,7 +25,14 @@ export const App = () => {
   return (
     <>
       <Container className="d-grid gap-3">
-        {isRefreshing ? null : (
+        {isRefreshing ? (
+          <Spinner
+            animation="border"
+            variant="primary"
+            gap={2}
+            className="col-md-5 mx-auto"
+          />
+        ) : (
           <Routes>
             <Route path="/" element={<Layout />}>
               <Route

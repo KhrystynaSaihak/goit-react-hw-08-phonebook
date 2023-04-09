@@ -1,9 +1,8 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import { logIn } from 'redux/auth/operations';
-
+import { register } from 'redux/auth/operations';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
@@ -12,16 +11,17 @@ import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
 import Alert from 'react-bootstrap/Alert';
 
-const Login = () => {
+const SignUp = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
+  const [show, setShow] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [name, setName] = useState('');
   const [validated, setValidated] = useState(false);
-  const [show, setShow] = useState(false);
   const onEmailInput = ({ target: { value } }) => setEmail(value);
   const onPasswordInput = ({ target: { value } }) => setPassword(value);
+  const onNameInput = ({ target: { value } }) => setName(value);
   const onFormSubmit = e => {
     e.preventDefault();
     const form = e.currentTarget;
@@ -33,16 +33,17 @@ const Login = () => {
 
     if (form.checkValidity() === true) {
       dispatch(
-        logIn({
+        register({
           email,
           password,
+          name,
         })
       )
         .unwrap()
         .then(data => {
           setEmail('');
           setPassword('');
-          navigate('/contacts');
+          setName('');
         })
         .catch(error => setShow(true));
     }
@@ -53,14 +54,9 @@ const Login = () => {
       {show ? (
         <Row className="justify-content-md-center">
           <Col xs lg="4">
-            <Alert
-              variant="danger"
-              onClose={() => setShow(false)}
-              dismissible
-              className="mx-auto "
-            >
+            <Alert variant="danger" onClose={() => setShow(false)} dismissible>
               <Alert.Heading>Oh snap! You got an error!</Alert.Heading>
-              <p>Change password or email and try again.</p>
+              <p>Change name or email and try again.</p>
             </Alert>{' '}
           </Col>
         </Row>
@@ -73,8 +69,22 @@ const Login = () => {
             validated={validated}
             className="d-grid"
           >
-            <h1>LOG IN</h1>
-
+            <h1>SIGH UP</h1>
+            <Form.Group className="mb-3" controlId="formBasicEmail">
+              <Form.Label>Name</Form.Label>
+              <InputGroup hasValidation>
+                <Form.Control
+                  type="text"
+                  placeholder="Enter your name"
+                  onChange={onNameInput}
+                  value={name}
+                  required
+                />
+                <Form.Control.Feedback type="invalid">
+                  Please enter your name.
+                </Form.Control.Feedback>
+              </InputGroup>
+            </Form.Group>
             <Form.Group className="mb-3" controlId="formBasicEmail">
               <Form.Label>Email address</Form.Label>
               <InputGroup hasValidation>
@@ -123,4 +133,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default SignUp;
